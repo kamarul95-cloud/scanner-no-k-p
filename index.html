@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ms">
+<!DOCTYPE html><html lang="ms">
 <head>
   <meta charset="UTF-8">
   <title>Ambil Gambar IC Dengan Auto Crop & Saiz Sebenar</title>
@@ -33,8 +32,8 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 80%; /* besarkan overlay */
-      aspect-ratio: 85.6 / 53.98; /* kekalkan nisbah IC */
+      width: 95%;
+      aspect-ratio: 85.6 / 53.98;
       transform: translate(-50%, -50%);
       border: 3px dashed rgba(42, 125, 61, 0.8);
       border-radius: 8px;
@@ -75,6 +74,9 @@
       <li>Tekan butang Gabungkan & Preview</li>
       <li>Download PDF dan upload ke Google Form</li>
     </ol>
+    
+    <button onclick="mulaKamera()">Mula Kamera</button>
+
     <div class="camera-wrapper">
       <video id="camera" autoplay playsinline></video>
       <div class="overlay"></div>
@@ -169,7 +171,7 @@
       pdfBlob = pdf.output('blob');
       const pdfUrl = URL.createObjectURL(pdfBlob);
 
-      document.getElementById('pdfPreview').innerHTML = <iframe src="${pdfUrl}" frameborder="0"></iframe>;
+      document.getElementById('pdfPreview').innerHTML = `<iframe src="${pdfUrl}" frameborder="0"></iframe>`;
       document.getElementById('downloadBtn').style.display = 'inline-block';
     }
 
@@ -181,8 +183,6 @@
         link.click();
       }
     }
-
-    window.onload = mulaKamera;
   </script>
 </body>
 </html>
