@@ -1,6 +1,7 @@
 <!DOCTYPE html><html lang="ms">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ambil Gambar IC Dengan Auto Crop & Saiz Sebenar</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
@@ -73,29 +74,30 @@
       <li>Ambil gambar IC belakang</li>
       <li>Tekan butang Gabungkan & Preview</li>
       <li>Download PDF dan upload ke Google Form</li>
-    </ol>
-    
-    <button onclick="mulaKamera()">Mula Kamera</button>
+    </ol><!-- Butang untuk memulakan kamera -->
+<button onclick="mulaKamera()">Mula Kamera</button>
+<!-- Butang untuk mengawal flash torch -->
+<button onclick="toggleFlash()">Toggle Lampu Flash</button>
 
-    <div class="camera-wrapper">
-      <video id="camera" autoplay playsinline></video>
-      <div class="overlay"></div>
-    </div>
-    <br>
-    <button onclick="ambilGambar('depan')">Ambil IC Depan</button>
-    <button onclick="ambilGambar('belakang')">Ambil IC Belakang</button>
-    <br>
-    <canvas id="snapshot" style="display:none;"></canvas>
-    <button onclick="prosesPDF()">Gabungkan & Preview</button>
-    <button id="downloadBtn" style="display:none;" onclick="muatTurunPDF()">Muat Turun PDF</button>
-    <div id="pdfPreview"></div>
-  </div>
+<div class="camera-wrapper">
+  <video id="camera" autoplay playsinline></video>
+  <div class="overlay"></div>
+</div>
+<br>
+<button onclick="ambilGambar('depan')">Ambil IC Depan</button>
+<button onclick="ambilGambar('belakang')">Ambil IC Belakang</button>
+<br>
+<canvas id="snapshot" style="display:none;"></canvas>
+<button onclick="prosesPDF()">Gabungkan & Preview</button>
+<button id="downloadBtn" style="display:none;" onclick="muatTurunPDF()">Muat Turun PDF</button>
+<div id="pdfPreview"></div>
 
-  <script>
+  </div>  <script>
     let stream;
     let gambarDepan = null;
     let gambarBelakang = null;
     let pdfBlob = null;
+    let torchOn = false;
 
     async function mulaKamera() {
       try {
@@ -103,6 +105,27 @@
         document.getElementById('camera').srcObject = stream;
       } catch (err) {
         alert("Tidak dapat mengakses kamera. Sila benarkan akses kamera.");
+      }
+    }
+
+    async function toggleFlash() {
+      if (!stream) {
+        alert("Kamera belum dimulakan.");
+        return;
+      }
+      const videoTrack = stream.getVideoTracks()[0];
+      const capabilities = videoTrack.getCapabilities();
+
+      if (!capabilities.torch) {
+        alert("Peranti ini tidak menyokong lampu flash.");
+        return;
+      }
+
+      try {
+        torchOn = !torchOn;
+        await videoTrack.applyConstraints({ advanced: [{ torch: torchOn }] });
+      } catch (err) {
+        alert("Tidak dapat mengawal flash: " + err.message);
       }
     }
 
@@ -183,6 +206,5 @@
         link.click();
       }
     }
-  </script>
-</body>
+  </script></body>
 </html>
