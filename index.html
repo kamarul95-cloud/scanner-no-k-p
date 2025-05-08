@@ -82,7 +82,7 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       background-color: rgba(0, 0, 0, 0.6);
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       z-index: 1000;
@@ -162,20 +162,25 @@
   </div>
 
   <script>
-    // TUTUP POPUP MODAL
-    window.onload = function() {
-      document.getElementById("popupModal").style.display = "flex";
-    };
-
-    document.getElementById("closePopup").onclick = function() {
-      document.getElementById("popupModal").style.display = "none";
-    };
-
     let stream;
     let gambarDepan = null;
     let gambarBelakang = null;
     let pdfBlob = null;
     let torchOn = false;
+
+    // Semua DOM load dan event listener di sini
+    window.addEventListener('DOMContentLoaded', () => {
+      const popup = document.getElementById("popupModal");
+      const closeBtn = document.getElementById("closePopup");
+
+      // Paparkan popup selepas DOM siap
+      popup.style.display = "flex";
+
+      // Tutup popup bila klik
+      closeBtn.addEventListener('click', () => {
+        popup.style.display = "none";
+      });
+    });
 
     async function mulaKamera() {
       try {
@@ -272,7 +277,7 @@
       pdfBlob = pdf.output('blob');
       const pdfUrl = URL.createObjectURL(pdfBlob);
 
-      document.getElementById('pdfPreview').innerHTML = <iframe src="${pdfUrl}" frameborder="0"></iframe>;
+      document.getElementById('pdfPreview').innerHTML = `<iframe src="${pdfUrl}" frameborder="0"></iframe>`;
       document.getElementById('downloadBtn').style.display = 'inline-block';
     }
 
