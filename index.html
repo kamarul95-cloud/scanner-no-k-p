@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ms">
+<!DOCTYPE html>
+<html lang="ms">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,6 +53,18 @@
     button:hover {
       background: #255a2c;
     }
+    .pulse-zoom-button {
+      animation: pulse 1.5s infinite;
+      transition: transform 0.3s ease-in-out;
+    }
+    .pulse-zoom-button:hover {
+      transform: scale(1.1);
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 0, 0, 0.2); }
+      50% { transform: scale(1.1); box-shadow: 0 0 15px rgba(42, 125, 61, 0.8); }
+      100% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 0, 0, 0.2); }
+    }
     #pdfPreview iframe {
       width: 100%;
       height: 500px;
@@ -62,37 +75,102 @@
       margin: 0 0 20px 0;
       padding-left: 20px;
     }
+
+    /* MODAL POPUP */
+    #popupModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    #popupModalContent {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      width: 90%;
+      text-align: left;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    #popupModalContent h3 {
+      margin-top: 0;
+      color: #2a7d3d;
+    }
+
+    #closePopup {
+      background: #d33;
+      color: white;
+      float: right;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #closePopup:hover {
+      background: #a00;
+    }
   </style>
 </head>
 <body>
+  <!-- POPUP MODAL -->
+  <div id="popupModal">
+    <div id="popupModalContent">
+      <button id="closePopup">Tutup</button>
+      <h3>Langkah-Langkah Penggunaan</h3>
+      <ol>
+        <li>Tekan <strong>Mula Kamera</strong></li>
+        <li>Ambil gambar IC depan</li>
+        <li>Ambil gambar IC belakang</li>
+        <li>Tekan <strong>Gabungkan & Preview</strong></li>
+        <li>Muat turun PDF dan hantar melalui Google Form</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- KANDUNGAN UTAMA -->
   <div class="container">
     <h2>Ambil Gambar IC Dengan Auto Crop & Saiz Sebenar</h2>
     <p>Langkah-langkah penggunaan:</p>
     <ol>
-      <li>Berikan akses kepada kamera</li>
+      <li>Tekan <strong>Mula Kamera</strong></li>
       <li>Ambil gambar IC depan</li>
       <li>Ambil gambar IC belakang</li>
-      <li>Tekan butang Gabungkan & Preview</li>
-      <li>Download PDF dan upload ke Google Form</li>
-    </ol><!-- Butang untuk memulakan kamera -->
-<button onclick="mulaKamera()">Mula Kamera</button>
-<!-- Butang untuk mengawal flash torch -->
-<button onclick="toggleFlash()">Toggle Lampu Flash</button>
+      <li>Tekan <strong>Gabungkan & Preview</strong></li>
+      <li>Muat turun PDF dan hantar melalui Google Form</li>
+    </ol>
+    <button class="pulse-zoom-button" onclick="mulaKamera()">Mula Kamera</button>
+    <button onclick="toggleFlash()">Toggle Lampu Flash</button>
 
-<div class="camera-wrapper">
-  <video id="camera" autoplay playsinline></video>
-  <div class="overlay"></div>
-</div>
-<br>
-<button onclick="ambilGambar('depan')">Ambil IC Depan</button>
-<button onclick="ambilGambar('belakang')">Ambil IC Belakang</button>
-<br>
-<canvas id="snapshot" style="display:none;"></canvas>
-<button onclick="prosesPDF()">Gabungkan & Preview</button>
-<button id="downloadBtn" style="display:none;" onclick="muatTurunPDF()">Muat Turun PDF</button>
-<div id="pdfPreview"></div>
+    <div class="camera-wrapper">
+      <video id="camera" autoplay playsinline></video>
+      <div class="overlay"></div>
+    </div>
+    <br>
+    <button onclick="ambilGambar('depan')">Ambil IC Depan</button>
+    <button onclick="ambilGambar('belakang')">Ambil IC Belakang</button>
+    <br>
+    <canvas id="snapshot" style="display:none;"></canvas>
+    <button onclick="prosesPDF()">Gabungkan & Preview</button>
+    <button id="downloadBtn" style="display:none;" onclick="muatTurunPDF()">Muat Turun PDF</button>
+    <div id="pdfPreview"></div>
+  </div>
 
-  </div>  <script>
+  <script>
+    // TUTUP POPUP MODAL
+    window.onload = function() {
+      document.getElementById("popupModal").style.display = "flex";
+    };
+
+    document.getElementById("closePopup").onclick = function() {
+      document.getElementById("popupModal").style.display = "none";
+    };
+
     let stream;
     let gambarDepan = null;
     let gambarBelakang = null;
@@ -194,7 +272,7 @@
       pdfBlob = pdf.output('blob');
       const pdfUrl = URL.createObjectURL(pdfBlob);
 
-      document.getElementById('pdfPreview').innerHTML = `<iframe src="${pdfUrl}" frameborder="0"></iframe>`;
+      document.getElementById('pdfPreview').innerHTML = <iframe src="${pdfUrl}" frameborder="0"></iframe>;
       document.getElementById('downloadBtn').style.display = 'inline-block';
     }
 
@@ -206,5 +284,6 @@
         link.click();
       }
     }
-  </script></body>
+  </script>
+</body>
 </html>
